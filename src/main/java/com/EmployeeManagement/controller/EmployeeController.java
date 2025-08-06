@@ -1,7 +1,10 @@
 package com.EmployeeManagement.controller;
 
+import com.EmployeeManagement.dto.APIResponse;
 import com.EmployeeManagement.entity.Employee;
+import com.EmployeeManagement.exceptions.EmployeeNotFoundException;
 import com.EmployeeManagement.service.impl.EmployeeService;
+import jakarta.validation.Valid;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.RequestEntity;
@@ -18,30 +21,46 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> createEmployee(@RequestBody Employee employee){
+    public ResponseEntity<String> createEmployee(@Valid @RequestBody Employee employee){
         employeeService.createEmployee(employee);
         return ResponseEntity.ok("Employee successfully created with id: "+employee.getId());
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<Employee>> getALlEmployees(){
-        return ResponseEntity.ok(employeeService.getAllEmployee());
+    public ResponseEntity<APIResponse<List<Employee>>> getALlEmployees(){
+        List<Employee> employeeList = employeeService.getAllEmployee();
+        APIResponse<List<Employee>> response = new APIResponse<>();
+        response.setData(employeeList);
+        return ResponseEntity.ok().body(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Employee> getEmployee(@PathVariable Long id){
-        return ResponseEntity.ok(employeeService.getEmployeeById(id));
+    public ResponseEntity<APIResponse<Employee>> getEmployee(@PathVariable Long id){
+        Employee employee = employeeService.getEmployeeById(id);
+        APIResponse<Employee> response = new APIResponse<>();
+        response.setData(employee);
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/update/{id}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employee){
-        return ResponseEntity.ok(employeeService.updateEmployee(id,employee));
+    public ResponseEntity<APIResponse<Employee>> updateEmployee(@PathVariable Long id, @RequestBody Employee employee){
+        APIResponse<Employee> response = new APIResponse<>();
+        response.setMessage("Employee data successfully updated");
+        return ResponseEntity.ok().body(response);
     }
 
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteEmployee(@PathVariable Long id){
-        employeeService.deleteEmployee(id);
-        return ResponseEntity.ok("Employee with id: "+id+" successfully deleted");
+    public ResponseEntity<APIResponse<String>> deleteEmployee(@PathVariable Long id) throws EmployeeNotFoundException {
+        Employee employee = employeeService.getEmployeeById(id);
+        if(employee != null) {
+            employeeService.deleteEmployee(id);
+            APIResponse<String> response = new APIResponse<>();
+            response.setMessage("successfully deleted employee with id: "+id);
+            return ResponseEntity.ok().body(response);
+        }
+        else
+            throw new EmployeeNotFoundException();
+
     }
 }
