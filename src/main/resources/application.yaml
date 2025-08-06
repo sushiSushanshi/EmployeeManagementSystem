@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: EmployeeManagement
+  datasource:
+    url: jdbc:postgresql://localhost:5432/employee_management
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
