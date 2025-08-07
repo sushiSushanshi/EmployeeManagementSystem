@@ -1,4 +1,4 @@
-package com.EmployeeManagement.configuration.security;
+package com.EmployeeManagement.configuration;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
