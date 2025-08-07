@@ -1,6 +1,7 @@
 package com.EmployeeManagement.controller;
 
 import com.EmployeeManagement.dto.APIResponse;
+import com.EmployeeManagement.dto.EmployeeDTO;
 import com.EmployeeManagement.entity.Employee;
 import com.EmployeeManagement.exceptions.EmployeeNotFoundException;
 import com.EmployeeManagement.service.impl.EmployeeService;
@@ -21,9 +22,9 @@ public class EmployeeController {
     private EmployeeService employeeService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> createEmployee(@Valid @RequestBody Employee employee){
-        employeeService.createEmployee(employee);
-        return ResponseEntity.ok("Employee successfully created with id: "+employee.getId());
+    public ResponseEntity<EmployeeDTO> createEmployee(@Valid @RequestBody EmployeeDTO employeeDto){
+
+        return ResponseEntity.ok(employeeService.createEmployee(employeeDto));
     }
 
     @GetMapping("/all")

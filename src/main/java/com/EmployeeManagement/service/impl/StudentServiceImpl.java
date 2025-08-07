@@ -1,7 +1,9 @@
 package com.EmployeeManagement.service.impl;
 
+import com.EmployeeManagement.dto.EmployeeDTO;
 import com.EmployeeManagement.entity.Employee;
 import com.EmployeeManagement.repository.EmployeeRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +14,17 @@ import java.util.NoSuchElementException;
 public class StudentServiceImpl implements EmployeeService {
 
     @Autowired
+    private ModelMapper modelMapper;
+    @Autowired
     private EmployeeRepository employeeRepository;
 
     @Override
-    public void createEmployee(Employee employee) {
+    public EmployeeDTO createEmployee(EmployeeDTO employeeDTO) {
+        Employee employee = modelMapper.map(employeeDTO, Employee.class);
         employeeRepository.save(employee);
+        EmployeeDTO responseEmployeeDto=modelMapper.map(employee, EmployeeDTO.class);
+        return responseEmployeeDto;
+
     }
 
     @Override
