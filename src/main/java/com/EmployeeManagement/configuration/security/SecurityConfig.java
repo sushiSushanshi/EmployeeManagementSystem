@@ -19,19 +19,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(c -> c.disable())
-                .authorizeHttpRequests(request -> request.requestMatchers("/auth") .permitAll())
-                .authorizeHttpRequests((request ->  request.anyRequest().authenticated()))
+                .authorizeHttpRequests(request -> request.requestMatchers("/auth/**") .permitAll()
+                        .anyRequest().authenticated())
                 .httpBasic()
                 .and()
                 .build();
     }
 
-    @Bean
-    public UserDetailsService userDetailsService(){
-        UserDetails userDetails = User.withUsername("sushi")
-                .password(bCryptPasswordEncoder().encode("sushi")).build();
-        return new InMemoryUserDetailsManager(userDetails);
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService(){
+//        UserDetails userDetails = User.withUsername("sushi")
+//                .password(bCryptPasswordEncoder().encode("sushi")).build();
+//        return new InMemoryUserDetailsManager(userDetails);
+//    }
 
     @Bean
     public PasswordEncoder bCryptPasswordEncoder(){
