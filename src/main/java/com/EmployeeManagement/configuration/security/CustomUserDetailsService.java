@@ -12,19 +12,19 @@ import org.springframework.stereotype.Service;
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserInfoRepository customUserRepository;
+    private UserInfoRepository userInfoRepository;
 
     @Autowired
     private SecurityConfig securityConfig;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return  customUserRepository.findByUsername(username)
+        return  userInfoRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("username does not exist"));
     }
 
     public UserInfo createUser(UserInfo userInfo){
         userInfo.setPassword(securityConfig.bCryptPasswordEncoder().encode(userInfo.getPassword()));
-        return customUserRepository.save(userInfo);
+        return userInfoRepository.save(userInfo);
     }
 }
